@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyShelf - User Collection</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('myshelf-theme') || 'dark');</script>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="header-brand">
+                <a href="/" class="brand-link">
+                    <img src="/logo.png" alt="MyShelf" class="brand-logo">
+                    <h1>MyShelf</h1>
+                </a>
+                <p class="tagline">Your personal collection showcase</p>
+            </div>
+            <div class="header-user" id="header-user">
+                <div class="user-dropdown">
+                    <button class="user-dropdown-trigger" id="dropdown-trigger">
+                        <div class="user-info">
+                            <span class="user-name" id="user-name">Loading...</span>
+                            <span class="user-email" id="user-email"></span>
+                        </div>
+                        <img src="" alt="Profile" class="header-avatar" id="header-avatar">
+                        <div class="avatar-fallback" id="avatar-fallback">👤</div>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <a href="#" class="dropdown-item" id="my-profile-link">
+                            <span class="dropdown-icon">👤</span>
+                            My Profile
+                        </a>
+                        <a href="/pages/explore.html" class="dropdown-item">
+                            <span class="dropdown-icon">🔍</span>
+                            Explore
+                        </a>
+                        <a href="/pages/social.html" class="dropdown-item">
+                            <span class="dropdown-icon">👥</span>
+                            Social
+                        </a>
+                        <a href="/pages/feed.html" class="dropdown-item">
+                            <span class="dropdown-icon">📰</span>
+                            Feed
+                        </a>
+                        <a href="/pages/settings.html" class="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span>
+                            Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item dropdown-item-danger" id="logout-btn">
+                            <span class="dropdown-icon">🚪</span>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="user-profile-page">
+            <a href="/pages/explore.html" class="back-link">&larr; Back to Explore</a>
+
+            <div class="loading-state" id="loading-state">
+                <div class="spinner"></div>
+                <p>Loading collection...</p>
+            </div>
+
+            <div class="user-private-notice" id="private-notice" style="display: none;">
+                <div class="empty-icon">🔒</div>
+                <h3>Private Profile</h3>
+                <p>This user's profile is not public</p>
+            </div>
+
+            <div class="user-not-found" id="not-found" style="display: none;">
+                <div class="empty-icon">❓</div>
+                <h3>User Not Found</h3>
+                <p>This user doesn't exist or their profile has been removed</p>
+            </div>
+
+            <div id="profile-content" style="display: none;">
+                <!-- View Mode Header -->
+                <div class="user-profile-header" id="view-mode-header">
+                    <img src="" alt="" class="user-profile-avatar" id="profile-avatar" style="display: none;">
+                    <div class="user-profile-avatar-placeholder" id="profile-avatar-placeholder">👤</div>
+                    <div class="user-profile-info">
+                        <h2 id="profile-name">User</h2>
+                        <p class="user-profile-username" id="profile-username"></p>
+                        <p class="user-profile-bio" id="profile-bio"></p>
+                        <div class="user-profile-stats">
+                            <div class="user-stat">
+                                <div class="user-stat-value" id="stat-items">0</div>
+                                <div class="user-stat-label">Public Items</div>
+                            </div>
+                            <div class="user-stat">
+                                <div class="user-stat-value" id="stat-boxes">0</div>
+                                <div class="user-stat-label">Public Boxes</div>
+                            </div>
+                            <div class="user-stat clickable" id="stat-followers-container">
+                                <div class="user-stat-value" id="stat-followers">0</div>
+                                <div class="user-stat-label">Followers</div>
+                            </div>
+                            <div class="user-stat clickable" id="stat-following-container">
+                                <div class="user-stat-value" id="stat-following">0</div>
+                                <div class="user-stat-label">Following</div>
+                            </div>
+                            <div class="user-stat clickable" id="stat-friends-container">
+                                <div class="user-stat-value" id="stat-friends">0</div>
+                                <div class="user-stat-label">Friends</div>
+                            </div>
+                        </div>
+                        <div class="profile-action-buttons" id="profile-actions" style="display: none;">
+                            <button class="btn btn-primary btn-small" id="follow-btn">Follow</button>
+                            <button class="btn btn-secondary btn-small" id="friend-btn">Add Friend</button>
+                        </div>
+                        <button class="btn btn-primary btn-small" id="edit-profile-btn" style="display: none; margin-top: 16px;">Edit Profile</button>
+                    </div>
+                </div>
+
+                <!-- Edit Mode Header (Own Profile Only) -->
+                <div class="user-profile-edit" id="edit-mode-header" style="display: none;">
+                    <div class="edit-profile-card">
+                        <div class="edit-avatar-section">
+                            <div class="edit-avatar-preview">
+                                <img src="" alt="" class="edit-avatar-img" id="edit-avatar-img" style="display: none;">
+                                <div class="edit-avatar-placeholder" id="edit-avatar-placeholder">👤</div>
+                            </div>
+                            <div class="edit-avatar-controls">
+                                <div class="file-upload">
+                                    <input type="file" id="avatar-file" accept="image/jpeg,image/png,image/gif,image/webp,image/avif">
+                                    <label for="avatar-file" class="file-upload-label compact">
+                                        <span class="upload-icon">📁</span>
+                                        <span class="upload-text" id="avatar-upload-text">Change Photo</span>
+                                    </label>
+                                </div>
+                                <div class="upload-progress" id="avatar-upload-progress" style="display: none;">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="avatar-progress-fill"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="edit-profile-fields">
+                            <div class="form-group">
+                                <label for="edit-display-name">Display Name</label>
+                                <input type="text" id="edit-display-name" placeholder="Your display name">
+                                <p class="username-preview" id="username-preview"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-bio">Bio</label>
+                                <textarea id="edit-bio" rows="3" placeholder="Tell others about your collection..." maxlength="200"></textarea>
+                                <p class="form-hint"><span id="bio-count">0</span>/200 characters</p>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Public Profile</span>
+                                    <span class="setting-description">Allow others to find and view your public items</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="edit-public">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="success-message" id="edit-success"></div>
+                            <div class="error-message" id="edit-error"></div>
+
+                            <div class="edit-profile-actions">
+                                <button class="btn btn-secondary" id="cancel-edit-btn">Cancel</button>
+                                <button class="btn btn-primary" id="save-profile-btn">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="user-profile-stats edit-stats">
+                        <div class="user-stat">
+                            <div class="user-stat-value" id="edit-stat-items">0</div>
+                            <div class="user-stat-label">Public Items</div>
+                        </div>
+                        <div class="user-stat">
+                            <div class="user-stat-value" id="edit-stat-boxes">0</div>
+                            <div class="user-stat-label">Public Boxes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-collection-section" id="boxes-section" style="display: none;">
+                    <h3>Boxes</h3>
+                    <div class="collection-grid" id="boxes-grid"></div>
+                </div>
+
+                <div class="user-collection-section" id="items-section" style="display: none;">
+                    <h3>Items</h3>
+                    <div class="collection-grid" id="items-grid"></div>
+                </div>
+
+                <div class="user-private-notice" id="empty-notice" style="display: none;">
+                    <div class="empty-icon">📭</div>
+                    <h3>No Public Items</h3>
+                    <p>This user hasn't made any items public yet</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Item Detail Modal -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content modal-detail">
+            <button class="close-btn" id="close-detail">&times;</button>
+            <div class="detail-content" id="detail-content">
+                <!-- Detail content will be dynamically added -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MyShelf. Track what matters to you.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="/js/user.js"></script>
+</body>
+</html>

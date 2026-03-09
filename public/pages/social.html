@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyShelf - Social</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('myshelf-theme') || 'dark');</script>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="header-brand">
+                <a href="/" class="brand-link">
+                    <img src="/logo.png" alt="MyShelf" class="brand-logo">
+                    <h1>MyShelf</h1>
+                </a>
+                <p class="tagline">Your personal collection showcase</p>
+            </div>
+            <div class="header-user" id="header-user">
+                <div class="user-dropdown">
+                    <button class="user-dropdown-trigger" id="dropdown-trigger">
+                        <div class="user-info">
+                            <span class="user-name" id="user-name">Loading...</span>
+                            <span class="user-email" id="user-email"></span>
+                        </div>
+                        <img src="" alt="Profile" class="header-avatar" id="header-avatar">
+                        <div class="avatar-fallback" id="avatar-fallback">👤</div>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <a href="#" class="dropdown-item" id="my-profile-link">
+                            <span class="dropdown-icon">👤</span>
+                            My Profile
+                        </a>
+                        <a href="/pages/explore.html" class="dropdown-item">
+                            <span class="dropdown-icon">🔍</span>
+                            Explore
+                        </a>
+                        <a href="/pages/feed.html" class="dropdown-item">
+                            <span class="dropdown-icon">📰</span>
+                            Feed
+                        </a>
+                        <a href="/pages/settings.html" class="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span>
+                            Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item dropdown-item-danger" id="logout-btn">
+                            <span class="dropdown-icon">🚪</span>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="social-page">
+            <div class="social-header">
+                <a href="/" class="back-link">&larr; Back to My Collection</a>
+                <h2 id="page-title">Social</h2>
+                <p class="social-description" id="page-description">Manage your connections</p>
+            </div>
+
+            <div class="social-tabs">
+                <button class="social-tab active" data-tab="followers">
+                    Followers <span class="tab-count" id="tab-followers-count">0</span>
+                </button>
+                <button class="social-tab" data-tab="following">
+                    Following <span class="tab-count" id="tab-following-count">0</span>
+                </button>
+                <button class="social-tab" data-tab="friends">
+                    Friends <span class="tab-count" id="tab-friends-count">0</span>
+                </button>
+                <button class="social-tab" data-tab="requests" id="requests-tab">
+                    Requests <span class="tab-count" id="tab-requests-count">0</span>
+                </button>
+            </div>
+
+            <div class="loading-state" id="loading-state">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+
+            <div class="social-content" id="social-content" style="display: none;">
+                <div class="social-list" id="social-list">
+                    <!-- User cards will be dynamically added -->
+                </div>
+
+                <div class="social-empty" id="social-empty" style="display: none;">
+                    <div class="empty-icon" id="empty-icon">👥</div>
+                    <h3 id="empty-title">No connections yet</h3>
+                    <p id="empty-message">Start following people or send friend requests</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MyShelf. Track what matters to you.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="/js/social.js"></script>
+</body>
+</html>

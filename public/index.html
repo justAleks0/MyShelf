@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyShelf - Track Your Collections</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('myshelf-theme') || 'dark');</script>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="header-brand">
+                <a href="/" class="brand-link">
+                    <img src="/logo.png" alt="MyShelf" class="brand-logo">
+                    <h1>MyShelf</h1>
+                </a>
+                <p class="tagline">Your personal collection showcase</p>
+            </div>
+            <div class="header-user" id="header-user">
+                <div class="notification-bell" id="notification-bell">
+                    <button class="notification-trigger" id="notification-trigger">
+                        <span class="bell-icon">🔔</span>
+                        <span class="notification-badge" id="notification-badge" style="display: none;">0</span>
+                    </button>
+                    <div class="notification-dropdown" id="notification-dropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button class="mark-all-read" id="mark-all-read">Mark all read</button>
+                        </div>
+                        <div class="notification-list" id="notification-list">
+                            <div class="notification-empty">No new notifications</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-dropdown">
+                    <button class="user-dropdown-trigger" id="dropdown-trigger">
+                        <div class="user-info">
+                            <span class="user-name" id="user-name">Loading...</span>
+                            <span class="user-email" id="user-email"></span>
+                        </div>
+                        <img src="" alt="Profile" class="header-avatar" id="header-avatar">
+                        <div class="avatar-fallback" id="avatar-fallback">👤</div>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <a href="#" class="dropdown-item" id="my-profile-link">
+                            <span class="dropdown-icon">👤</span>
+                            My Profile
+                        </a>
+                        <a href="/pages/explore.html" class="dropdown-item">
+                            <span class="dropdown-icon">🔍</span>
+                            Explore
+                        </a>
+                        <a href="/pages/social.html" class="dropdown-item">
+                            <span class="dropdown-icon">👥</span>
+                            Social
+                        </a>
+                        <a href="/pages/feed.html" class="dropdown-item">
+                            <span class="dropdown-icon">📰</span>
+                            Feed
+                        </a>
+                        <a href="/pages/settings.html" class="dropdown-item">
+                            <span class="dropdown-icon">⚙️</span>
+                            Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item dropdown-item-danger" id="logout-btn">
+                            <span class="dropdown-icon">🚪</span>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="add-item-section">
+            <div class="collection-stats" id="collection-stats">
+                <span id="item-count">0 items</span>
+                <span class="stat-divider">•</span>
+                <span id="box-count">0 boxes</span>
+                <span class="stat-divider">•</span>
+                <span id="bundle-count">0 bundles</span>
+                <button id="view-stats-btn" class="btn-stats" title="View Statistics">📊</button>
+            </div>
+            <div class="action-buttons">
+                <button id="select-mode-btn" class="btn btn-outline">Select</button>
+                <button id="add-bundle-btn" class="btn btn-secondary">+ New Bundle</button>
+                <button id="add-box-btn" class="btn btn-secondary">+ New Box</button>
+                <button id="add-item-btn" class="btn btn-primary">+ Add Item</button>
+            </div>
+        </section>
+
+        <!-- Bulk Actions Toolbar -->
+        <section class="bulk-toolbar" id="bulk-toolbar">
+            <div class="bulk-info">
+                <span id="selected-count">0 selected</span>
+                <button id="select-all-btn" class="btn-link">Select All</button>
+                <button id="deselect-all-btn" class="btn-link">Deselect All</button>
+            </div>
+            <div class="bulk-actions">
+                <select id="bulk-move-box" class="bulk-select">
+                    <option value="">Move to Box...</option>
+                    <option value="none">Remove from Box</option>
+                </select>
+                <select id="bulk-visibility" class="bulk-select">
+                    <option value="">Set Visibility...</option>
+                    <option value="public">Public</option>
+                    <option value="private">Private</option>
+                </select>
+                <button id="bulk-delete-btn" class="btn btn-danger">Delete Selected</button>
+            </div>
+            <button id="cancel-select-btn" class="btn btn-secondary">Cancel</button>
+        </section>
+
+        <section class="filters">
+            <input type="text" id="search" placeholder="Search your collection...">
+            <select id="category-filter">
+                <option value="all">All Categories</option>
+            </select>
+            <select id="view-filter">
+                <option value="all">All Items</option>
+                <option value="loose">Loose Items Only</option>
+                <option value="boxes">Boxes Only</option>
+                <option value="bundles">Bundles Only</option>
+            </select>
+            <select id="sort-filter">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="year-desc">Year (Newest)</option>
+                <option value="year-asc">Year (Oldest)</option>
+                <option value="category">Category (A-Z)</option>
+            </select>
+            <button class="btn btn-small btn-secondary" id="toggle-advanced-filters">
+                <span class="filter-icon">⚡</span> Advanced
+            </button>
+        </section>
+
+        <section class="advanced-filters" id="advanced-filters" style="display: none;">
+            <div class="advanced-filters-grid">
+                <div class="filter-group">
+                    <label>Origin</label>
+                    <select id="filter-origin">
+                        <option value="all">All Origins</option>
+                        <option value="official">Official</option>
+                        <option value="fan-made">Fan-made</option>
+                        <option value="custom-commissioned">Custom (Commissioned)</option>
+                        <option value="custom-self">Custom (Self-made)</option>
+                        <option value="reseller">Re-seller/Dropshipper</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Condition</label>
+                    <select id="filter-condition">
+                        <option value="all">All Conditions</option>
+                        <option value="mint">Mint</option>
+                        <option value="near-mint">Near Mint</option>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
+                        <option value="poor">Poor</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Year Range</label>
+                    <div class="year-range">
+                        <input type="number" id="filter-year-from" placeholder="From" min="1900" max="2100">
+                        <span>—</span>
+                        <input type="number" id="filter-year-to" placeholder="To" min="1900" max="2100">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Visibility</label>
+                    <select id="filter-visibility">
+                        <option value="all">All</option>
+                        <option value="public">Public Only</option>
+                        <option value="private">Private Only</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Has Images</label>
+                    <select id="filter-has-images">
+                        <option value="all">All</option>
+                        <option value="yes">With Images</option>
+                        <option value="no">Without Images</option>
+                    </select>
+                </div>
+                <div class="filter-group filter-group-tags">
+                    <label>Tags (comma separated)</label>
+                    <input type="text" id="filter-tags" placeholder="e.g., anime, rare, signed">
+                </div>
+            </div>
+            <div class="advanced-filters-actions">
+                <button class="btn btn-small btn-secondary" id="clear-advanced-filters">Clear Filters</button>
+                <span class="active-filters-count" id="active-filters-count"></span>
+            </div>
+        </section>
+
+        <section class="loading-state" id="loading-state">
+            <div class="spinner"></div>
+            <p>Loading your collection...</p>
+        </section>
+
+        <section class="collection-grid" id="collection-grid">
+            <!-- Items will be dynamically added here -->
+        </section>
+
+        <div class="pagination" id="pagination" style="display: none;">
+            <button class="pagination-btn" id="prev-page" disabled>&larr; Previous</button>
+            <span class="pagination-info" id="pagination-info">Page 1 of 1</span>
+            <button class="pagination-btn" id="next-page" disabled>Next &rarr;</button>
+        </div>
+
+        <section class="empty-state" id="empty-state">
+            <div class="empty-icon">📦</div>
+            <h2>Your shelf is empty!</h2>
+            <p>Start adding items to build your collection.</p>
+        </section>
+    </main>
+
+    <!-- Add/Edit Item Modal -->
+    <div class="modal" id="item-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Item</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <form id="item-form">
+                <input type="hidden" id="item-id">
+                
+                <div class="form-group">
+                    <label for="item-name">Item Name *</label>
+                    <input type="text" id="item-name" required placeholder="e.g., Charizard Holographic">
+                </div>
+
+                <div class="form-group">
+                    <label>Category *</label>
+                    <div class="quick-select-wrapper">
+                        <input type="text" id="item-category" placeholder="Type or select a category" autocomplete="off">
+                        <button type="button" class="quick-select-toggle" id="category-toggle">▼</button>
+                    </div>
+                    <div class="quick-select-dropdown" id="category-dropdown">
+                        <div class="quick-select-options" id="category-options">
+                            <!-- Categories will be dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-box">Box</label>
+                    <div class="box-select-wrapper">
+                        <select id="item-box">
+                            <option value="">No box (loose on shelf)</option>
+                        </select>
+                        <button type="button" class="btn btn-small btn-secondary" id="quick-add-box-btn" title="Create new box">+</button>
+                    </div>
+                    <p class="form-hint">Optionally group this item into a box</p>
+                </div>
+                
+                <div class="quick-box-form" id="quick-box-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="quick-box-name">New Box Name *</label>
+                        <input type="text" id="quick-box-name" placeholder="e.g., Honkai Star Rail">
+                    </div>
+                    <div class="quick-box-actions">
+                        <button type="button" class="btn btn-small btn-secondary" id="cancel-quick-box">Cancel</button>
+                        <button type="button" class="btn btn-small btn-primary" id="save-quick-box">Create Box</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-visibility">Visibility</label>
+                    <select id="item-visibility">
+                        <option value="private">Private - Only you can see</option>
+                        <option value="public">Public - Visible on your public profile</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-origin">Origin</label>
+                    <select id="item-origin">
+                        <option value="">Select origin</option>
+                        <option value="official">Official</option>
+                        <option value="reseller">Re-seller/Dropshipper</option>
+                        <option value="fan-made">Fan-made</option>
+                        <option value="custom-commissioned">Custom (Commissioned)</option>
+                        <option value="custom-self-made">Custom (Self-made)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-tags">Tags</label>
+                    <div class="tags-input-wrapper" id="tags-wrapper">
+                        <div class="tags-container" id="tags-container"></div>
+                        <div class="quick-select-wrapper tags-input-row">
+                            <input type="text" id="item-tags-input" placeholder="Type a tag and press Enter" autocomplete="off">
+                            <button type="button" class="quick-select-toggle" id="tags-toggle">▼</button>
+                        </div>
+                    </div>
+                    <div class="quick-select-dropdown" id="tags-dropdown">
+                        <div class="quick-select-options" id="tags-options">
+                            <!-- Saved tags will be dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="item-description">Description</label>
+                    <textarea id="item-description" rows="3" placeholder="Add details about your item..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="item-year">Year</label>
+                        <input type="number" id="item-year" placeholder="2024" min="1900" max="2100">
+                    </div>
+                    <div class="form-group">
+                        <label for="item-condition">Condition</label>
+                        <select id="item-condition">
+                            <option value="">Select condition</option>
+                            <option value="mint">Mint</option>
+                            <option value="near-mint">Near Mint</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                            <option value="poor">Poor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Item Images</label>
+                    <div class="item-images-section">
+                        <div class="item-images-preview" id="item-images-preview">
+                            <!-- Image previews will be added here -->
+                        </div>
+                        <div class="item-images-upload">
+                            <label for="item-image-file" class="upload-label">
+                                <span class="upload-icon">📷</span>
+                                <span id="item-upload-text">Add Images</span>
+                            </label>
+                            <input type="file" id="item-image-file" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" multiple style="display: none;">
+                        </div>
+                    </div>
+                    <p class="form-hint">Upload multiple images (JPEG, PNG, GIF, WebP, AVIF). First image is the cover.</p>
+                    <p class="form-hint form-hint-tip"><strong>Did you know?</strong> When the file picker opens, you can paste any image URL into the "File name" field instead of choosing a local file. Windows will fetch a temporary copy and treat it like a local file — perfect for using images from sites that don't let you use links for images.</p>
+                    <div class="upload-progress" id="item-upload-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="item-progress-fill"></div>
+                        </div>
+                        <span class="progress-text" id="item-progress-text">Uploading...</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content modal-detail">
+            <button class="close-btn" id="close-detail">&times;</button>
+            <div class="detail-content" id="detail-content">
+                <!-- Detail content will be dynamically added -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Box Modal -->
+    <div class="modal" id="box-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="box-modal-title">Create New Box</h2>
+                <button class="close-btn" id="close-box-modal">&times;</button>
+            </div>
+            <form id="box-form">
+                <input type="hidden" id="box-id">
+                
+                <div class="form-group">
+                    <label for="box-name">Box Name *</label>
+                    <input type="text" id="box-name" required placeholder="e.g., Honkai Star Rail">
+                </div>
+
+                <div class="form-group">
+                    <label for="box-description">Description</label>
+                    <textarea id="box-description" rows="3" placeholder="What's in this box?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="box-visibility">Visibility</label>
+                    <select id="box-visibility">
+                        <option value="private">Private - Only you can see</option>
+                        <option value="public">Public - Visible on your public profile</option>
+                    </select>
+                    <p class="form-hint">Public boxes show all their items on your public profile</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-box-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Box</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Bundle Modal -->
+    <div class="modal" id="bundle-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2 id="bundle-modal-title">Create New Bundle</h2>
+                <button class="close-btn" id="close-bundle-modal">&times;</button>
+            </div>
+            <form id="bundle-form">
+                <input type="hidden" id="bundle-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bundle-name">Bundle Name *</label>
+                        <input type="text" id="bundle-name" required placeholder="e.g., PlayStation VR2 Bundle">
+                    </div>
+                    <div class="form-group">
+                        <label for="bundle-year">Year</label>
+                        <input type="number" id="bundle-year" placeholder="2024" min="1900" max="2100">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bundle-description">Description</label>
+                    <textarea id="bundle-description" rows="2" placeholder="Describe this bundle..."></textarea>
+                </div>
+
+                <!-- Multiple Images Section -->
+                <div class="form-group">
+                    <label>Bundle Images</label>
+                    <div class="bundle-images-section">
+                        <div class="bundle-images-preview" id="bundle-images-preview">
+                            <!-- Image previews will be added here -->
+                        </div>
+                        <div class="bundle-images-upload">
+                            <label for="bundle-image-file" class="upload-label">
+                                <span class="upload-icon">📷</span>
+                                <span id="bundle-upload-text">Add Images</span>
+                            </label>
+                            <input type="file" id="bundle-image-file" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" multiple style="display: none;">
+                        </div>
+                        <div class="upload-progress" id="bundle-upload-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="bundle-progress-fill"></div>
+                            </div>
+                            <span class="progress-text" id="bundle-progress-text">0%</span>
+                        </div>
+                    </div>
+                    <p class="form-hint">Upload multiple images to show all angles of your bundle</p>
+                </div>
+
+                <!-- Linked Items Section -->
+                <div class="form-group">
+                    <label>Linked Collection Items</label>
+                    <p class="form-hint">Link existing items from your collection to this bundle</p>
+                    <div class="bundle-linked-section">
+                        <div class="bundle-linked-list" id="bundle-linked-list">
+                            <!-- Linked items will be shown here -->
+                        </div>
+                        <div class="bundle-link-selector">
+                            <div class="item-search-wrapper">
+                                <input type="text" id="link-item-search" placeholder="Search items to link..." autocomplete="off">
+                                <div class="item-search-dropdown" id="link-item-dropdown">
+                                    <div class="item-search-results" id="link-item-results">
+                                        <!-- Search results will appear here -->
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-small btn-primary" id="create-item-for-bundle-btn">+ New Item</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bundle Contents Section (Manual) -->
+                <div class="form-group">
+                    <label>Additional Contents</label>
+                    <p class="form-hint">Add unlisted items like cables, adapters, etc.</p>
+                    <div class="bundle-contents-section">
+                        <div class="bundle-contents-list" id="bundle-contents-list">
+                            <!-- Content items will be added here -->
+                        </div>
+                        <div class="bundle-add-content">
+                            <input type="text" id="content-item-name" placeholder="Item name (e.g., Power Cable)">
+                            <input type="number" id="content-item-qty" placeholder="Qty" min="1" value="1" style="width: 70px;">
+                            <button type="button" class="btn btn-small btn-secondary" id="add-content-btn">+ Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bundle-category">Category</label>
+                        <select id="bundle-category">
+                            <option value="games">Games</option>
+                            <option value="figures">Figures</option>
+                            <option value="cards">Cards</option>
+                            <option value="books">Books</option>
+                            <option value="vinyl">Vinyl</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bundle-condition">Condition</label>
+                        <select id="bundle-condition">
+                            <option value="">Select condition...</option>
+                            <option value="mint">Mint</option>
+                            <option value="near-mint">Near Mint</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                            <option value="poor">Poor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bundle-origin">Origin</label>
+                        <select id="bundle-origin">
+                            <option value="">Select origin...</option>
+                            <option value="official">Official</option>
+                            <option value="fan-made">Fan-made</option>
+                            <option value="custom-commissioned">Custom (Commissioned)</option>
+                            <option value="custom-self-made">Custom (Self-made)</option>
+                            <option value="reseller">Re-seller/Dropshipper</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bundle-visibility">Visibility</label>
+                        <select id="bundle-visibility">
+                            <option value="private">Private</option>
+                            <option value="public">Public</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-bundle-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Bundle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bundle Detail Modal -->
+    <div class="modal modal-detail" id="bundle-detail-modal">
+        <div class="modal-content modal-large">
+            <button class="close-btn" id="close-bundle-detail">&times;</button>
+            <div id="bundle-detail-content">
+                <!-- Bundle details will be dynamically added -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Box Contents Modal -->
+    <div class="modal" id="box-contents-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <div class="box-modal-header-info">
+                    <h2 id="box-contents-title">Box Name</h2>
+                    <p id="box-contents-description" class="box-description"></p>
+                </div>
+                <div class="box-modal-actions">
+                    <button class="btn btn-small btn-secondary" id="edit-box-btn">Edit Box</button>
+                    <button class="btn btn-small btn-danger" id="delete-box-btn">Delete Box</button>
+                    <button class="close-btn" id="close-box-contents">&times;</button>
+                </div>
+            </div>
+            <div class="box-contents-grid" id="box-contents-grid">
+                <!-- Box items will be dynamically added -->
+            </div>
+            <div class="box-empty-state" id="box-empty-state">
+                <div class="empty-icon">📭</div>
+                <p>This box is empty</p>
+                <button class="btn btn-primary btn-small" id="add-to-box-btn">+ Add Item to Box</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div class="modal" id="stats-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>📊 Collection Statistics</h2>
+                <button class="close-btn" id="close-stats">&times;</button>
+            </div>
+            <div class="stats-dashboard" id="stats-dashboard">
+                <!-- Overview Cards -->
+                <div class="stats-overview">
+                    <div class="stats-card stats-card-primary">
+                        <div class="stats-card-icon">📦</div>
+                        <div class="stats-card-content">
+                            <span class="stats-card-value" id="stats-total-items">0</span>
+                            <span class="stats-card-label">Total Items</span>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-card-icon">🗃️</div>
+                        <div class="stats-card-content">
+                            <span class="stats-card-value" id="stats-total-boxes">0</span>
+                            <span class="stats-card-label">Boxes</span>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-card-icon">🌐</div>
+                        <div class="stats-card-content">
+                            <span class="stats-card-value" id="stats-public">0</span>
+                            <span class="stats-card-label">Public</span>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-card-icon">🔒</div>
+                        <div class="stats-card-content">
+                            <span class="stats-card-value" id="stats-private">0</span>
+                            <span class="stats-card-label">Private</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breakdown Sections -->
+                <div class="stats-sections">
+                    <div class="stats-section">
+                        <h3>By Category</h3>
+                        <div class="stats-bars" id="stats-by-category"></div>
+                    </div>
+                    <div class="stats-section">
+                        <h3>By Origin</h3>
+                        <div class="stats-bars" id="stats-by-origin"></div>
+                    </div>
+                    <div class="stats-section">
+                        <h3>By Condition</h3>
+                        <div class="stats-bars" id="stats-by-condition"></div>
+                    </div>
+                    <div class="stats-section">
+                        <h3>Recent Activity</h3>
+                        <div class="stats-recent" id="stats-recent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MyShelf. Track what matters to you.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="/js/script.js"></script>
+</body>
+</html>
