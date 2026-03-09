@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyShelf - Sign In</title>
-    <script>(function(){var p=location.pathname||'/';var b='/';if(p!=='/'&&!p.startsWith('/pages')){var m=p.match(/^\/([^/]+)/);if(m)b='/'+m[1]+'/';}document.write('<base href="'+b+'">');window.MYSHELF_BASE=b.replace(/\/$/,'')||'';})();</script>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="css/styles.css">
+    <script>
+    (function(){
+      var p=location.pathname||'/';
+      var b='/';
+      if(p!=='/'&&!p.startsWith('/pages')){var m=p.match(/^\/([^/]+)/);if(m)b='/'+m[1]+'/';}
+      window.MYSHELF_BASE=b.replace(/\/$/,'')||'';
+      document.write('<base href="'+b+'">');
+      document.write('<link rel="icon" href="'+b+'favicon.ico">');
+      document.write('<link rel="stylesheet" href="'+b+'css/styles.css">');
+    })();
+    </script>
     <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('myshelf-theme') || 'dark');</script>
 </head>
 <body>
@@ -104,6 +112,14 @@
         </div>
     </div>
 
-    <script type="module" src="js/auth.js"></script>
+    <script data-main="auth.js">
+    (function(){
+      var b=window.MYSHELF_BASE||'';
+      document.querySelectorAll('a[href="."],a[href="/"]').forEach(function(a){a.href=b?b+'/':'/';});
+      document.querySelectorAll('a[href^="pages/"]').forEach(function(a){a.href=(b?b+'/':'/')+a.getAttribute('href');});
+      document.querySelectorAll('img.brand-logo,img.auth-logo').forEach(function(img){img.src=(b?b+'/':'/')+'logo.png';});
+      var m=document.currentScript.getAttribute('data-main');if(m){var s=document.createElement('script');s.type='module';s.src=(b?b+'/':'/')+'js/'+m;document.body.appendChild(s);}
+    })();
+    </script>
 </body>
 </html>
