@@ -1,5 +1,6 @@
 // User Public Profile Page
 import { auth, db, onAuthStateChanged, signOut } from './firebase-config.js';
+const BASE = window.MYSHELF_BASE || '';
 import { 
     updateProfile
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
@@ -116,7 +117,7 @@ onAuthStateChanged(auth, (user) => {
         // Set profile link
         const profileLink = document.getElementById('my-profile-link');
         if (profileLink) {
-            profileLink.href = `/pages/user.html?id=${user.uid}`;
+            profileLink.href = `${BASE}/pages/user.html?id=${user.uid}`;
         }
         
         if (user.photoURL) {
@@ -135,7 +136,7 @@ onAuthStateChanged(auth, (user) => {
             showNotFound();
         }
     } else {
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     }
 });
 
@@ -1114,13 +1115,13 @@ friendBtn.addEventListener('click', handleFriendAction);
 
 // Social stat click handlers (navigate to social page)
 document.getElementById('stat-followers-container').addEventListener('click', () => {
-    window.location.href = `/pages/social.html?id=${viewedUserId}&tab=followers`;
+    window.location.href = `${BASE}/pages/social.html?id=${viewedUserId}&tab=followers`;
 });
 document.getElementById('stat-following-container').addEventListener('click', () => {
-    window.location.href = `/pages/social.html?id=${viewedUserId}&tab=following`;
+    window.location.href = `${BASE}/pages/social.html?id=${viewedUserId}&tab=following`;
 });
 document.getElementById('stat-friends-container').addEventListener('click', () => {
-    window.location.href = `/pages/social.html?id=${viewedUserId}&tab=friends`;
+    window.location.href = `${BASE}/pages/social.html?id=${viewedUserId}&tab=friends`;
 });
 
 editDisplayName.addEventListener('input', updateUsernamePreview);
@@ -1166,7 +1167,7 @@ avatarFile.addEventListener('change', (e) => {
 document.getElementById('logout-btn').addEventListener('click', async () => {
     try {
         await signOut(auth);
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     } catch (error) {
         console.error('Error signing out:', error);
     }

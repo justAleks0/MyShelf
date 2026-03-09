@@ -1,5 +1,6 @@
 // Social Page
 import { auth, db, onAuthStateChanged, signOut } from './firebase-config.js';
+const BASE = window.MYSHELF_BASE || '';
 import { 
     collection, 
     query, 
@@ -58,7 +59,7 @@ onAuthStateChanged(auth, (user) => {
         // Set profile link
         const profileLink = document.getElementById('my-profile-link');
         if (profileLink) {
-            profileLink.href = `/pages/user.html?id=${user.uid}`;
+            profileLink.href = `${BASE}/pages/user.html?id=${user.uid}`;
         }
         
         if (user.photoURL) {
@@ -82,7 +83,7 @@ onAuthStateChanged(auth, (user) => {
         
         initializePage();
     } else {
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     }
 });
 
@@ -328,7 +329,7 @@ function createUserCard(user) {
     
     return `
         <div class="social-card" data-user-id="${user.id}">
-            <div class="social-card-main" onclick="window.location.href='/pages/user.html?id=${user.id}'">
+            <div class="social-card-main" onclick="window.location.href='${BASE}/pages/user.html?id=${user.id}'">
                 ${avatarHtml}
                 <div class="social-card-info">
                     <h3 class="social-card-name">${user.displayName || 'User'}</h3>
@@ -508,7 +509,7 @@ document.querySelectorAll('.social-tab').forEach(tab => {
 document.getElementById('logout-btn').addEventListener('click', async () => {
     try {
         await signOut(auth);
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     } catch (error) {
         console.error('Error signing out:', error);
     }

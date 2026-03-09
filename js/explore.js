@@ -1,5 +1,6 @@
 // Explore Page Logic
 import { auth, db, onAuthStateChanged, signOut } from './firebase-config.js';
+const BASE = window.MYSHELF_BASE || '';
 import { 
     collection, 
     query, 
@@ -35,7 +36,7 @@ onAuthStateChanged(auth, (user) => {
         // Set profile link
         const profileLink = document.getElementById('my-profile-link');
         if (profileLink) {
-            profileLink.href = `/pages/user.html?id=${user.uid}`;
+            profileLink.href = `${BASE}/pages/user.html?id=${user.uid}`;
         }
         
         if (user.photoURL) {
@@ -49,7 +50,7 @@ onAuthStateChanged(auth, (user) => {
         
         loadFeaturedProfiles();
     } else {
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     }
 });
 
@@ -191,7 +192,7 @@ function createProfileCard(profile) {
             ${usernameHtml}
             ${profile.bio ? `<p class="result-bio">${profile.bio}</p>` : ''}
         </div>
-        <a href="/pages/user.html?id=${profile.userId}" class="btn btn-primary btn-small">View Collection</a>
+        <a href="${BASE}/pages/user.html?id=${profile.userId}" class="btn btn-primary btn-small">View Collection</a>
     `;
     
     return card;
@@ -210,7 +211,7 @@ userSearch.addEventListener('keydown', (e) => {
 document.getElementById('logout-btn').addEventListener('click', async () => {
     try {
         await signOut(auth);
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     } catch (error) {
         console.error('Error signing out:', error);
     }

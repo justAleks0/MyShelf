@@ -28,6 +28,8 @@ firebase deploy
 
 Your app will be live on the hosting URL Firebase gives you.
 
+**GitHub Pages:** You can also deploy via GitHub Pages (Settings → Pages → deploy from branch). The app auto-detects the base path when it’s served from a project subpath (e.g. `username.github.io/MyShelf/`).
+
 **Run it locally** (optional): only if you need to test on your machine. Same CLI, then:
 
 ```bash

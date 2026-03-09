@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyShelf - Sign In</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/styles.css">
+    <script>(function(){var p=location.pathname||'/';var b='/';if(p!=='/'&&!p.startsWith('/pages')){var m=p.match(/^\/([^/]+)/);if(m)b='/'+m[1]+'/';}document.write('<base href="'+b+'">');window.MYSHELF_BASE=b.replace(/\/$/,'')||'';})();</script>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/styles.css">
     <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('myshelf-theme') || 'dark');</script>
 </head>
 <body>
     <div class="auth-container">
         <div class="auth-card">
             <div class="auth-header">
-                <img src="/logo.png" alt="MyShelf" class="auth-logo">
+                <img src="logo.png" alt="MyShelf" class="auth-logo">
                 <h1>MyShelf</h1>
                 <p>Your personal collection showcase</p>
             </div>
@@ -103,6 +104,6 @@
         </div>
     </div>
 
-    <script type="module" src="/js/auth.js"></script>
+    <script type="module" src="js/auth.js"></script>
 </body>
 </html>

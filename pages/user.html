@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyShelf - User Collection</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/styles.css">
+    <script>(function(){var p=location.pathname||'/';var b='/';if(p!=='/'&&!p.startsWith('/pages')){var m=p.match(/^\/([^/]+)/);if(m)b='/'+m[1]+'/';}document.write('<base href="'+b+'">');window.MYSHELF_BASE=b.replace(/\/$/,'')||'';})();</script>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="css/styles.css">
     <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('myshelf-theme') || 'dark');</script>
 </head>
 <body>
     <header>
         <div class="container header-content">
             <div class="header-brand">
-                <a href="/" class="brand-link">
-                    <img src="/logo.png" alt="MyShelf" class="brand-logo">
+                <a href="." class="brand-link">
+                    <img src="logo.png" alt="MyShelf" class="brand-logo">
                     <h1>MyShelf</h1>
                 </a>
                 <p class="tagline">Your personal collection showcase</p>
@@ -34,19 +35,19 @@
                             <span class="dropdown-icon">👤</span>
                             My Profile
                         </a>
-                        <a href="/pages/explore.html" class="dropdown-item">
+                        <a href="pages/explore.html" class="dropdown-item">
                             <span class="dropdown-icon">🔍</span>
                             Explore
                         </a>
-                        <a href="/pages/social.html" class="dropdown-item">
+                        <a href="pages/social.html" class="dropdown-item">
                             <span class="dropdown-icon">👥</span>
                             Social
                         </a>
-                        <a href="/pages/feed.html" class="dropdown-item">
+                        <a href="pages/feed.html" class="dropdown-item">
                             <span class="dropdown-icon">📰</span>
                             Feed
                         </a>
-                        <a href="/pages/settings.html" class="dropdown-item">
+                        <a href="pages/settings.html" class="dropdown-item">
                             <span class="dropdown-icon">⚙️</span>
                             Settings
                         </a>
@@ -63,7 +64,7 @@
 
     <main class="container">
         <div class="user-profile-page">
-            <a href="/pages/explore.html" class="back-link">&larr; Back to Explore</a>
+            <a href="pages/explore.html" class="back-link">&larr; Back to Explore</a>
 
             <div class="loading-state" id="loading-state">
                 <div class="spinner"></div>
@@ -226,6 +227,6 @@
         </div>
     </footer>
 
-    <script type="module" src="/js/user.js"></script>
+    <script type="module" src="js/user.js"></script>
 </body>
 </html>

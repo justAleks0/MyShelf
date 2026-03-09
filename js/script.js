@@ -1,5 +1,6 @@
 // MyShelf - Collection Tracker with Firebase
 import { auth, db, onAuthStateChanged, signOut } from './firebase-config.js';
+const BASE = window.MYSHELF_BASE || '';
 import { 
     collection, 
     addDoc, 
@@ -169,7 +170,7 @@ onAuthStateChanged(auth, (user) => {
         // Set profile link
         const profileLink = document.getElementById('my-profile-link');
         if (profileLink) {
-            profileLink.href = `/pages/user.html?id=${user.uid}`;
+            profileLink.href = `${BASE}/pages/user.html?id=${user.uid}`;
         }
         
         // Load settings
@@ -196,7 +197,7 @@ onAuthStateChanged(auth, (user) => {
         loadCollection();
         loadNotifications();
     } else {
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     }
 });
 
@@ -2488,7 +2489,7 @@ async function handleSignOut() {
         if (unsubscribeBoxes) unsubscribeBoxes();
         if (unsubscribeBundles) unsubscribeBundles();
         await signOut(auth);
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     } catch (error) {
         console.error('Error signing out:', error);
     }
@@ -2674,7 +2675,7 @@ function renderNotifications(notifs) {
             }
             
             // Navigate to user's profile
-            window.location.href = `/pages/user.html?id=${userId}`;
+            window.location.href = `${BASE}/pages/user.html?id=${userId}`;
         });
     });
 }

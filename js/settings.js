@@ -1,5 +1,6 @@
 // Settings Page Logic
 import { auth, db, onAuthStateChanged, signOut, googleProvider, linkWithPopup, unlink, EmailAuthProvider, linkWithCredential } from './firebase-config.js';
+const BASE = window.MYSHELF_BASE || '';
 import { 
     sendPasswordResetEmail,
     deleteUser
@@ -42,7 +43,7 @@ onAuthStateChanged(auth, (user) => {
         // Set profile link
         const profileLink = document.getElementById('my-profile-link');
         if (profileLink) {
-            profileLink.href = `/pages/user.html?id=${user.uid}`;
+            profileLink.href = `${BASE}/pages/user.html?id=${user.uid}`;
         }
         
         // Handle avatar
@@ -58,7 +59,7 @@ onAuthStateChanged(auth, (user) => {
         loadSettings();
         renderLinkedAccounts();
     } else {
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     }
 });
 
@@ -430,7 +431,7 @@ document.getElementById('delete-account-btn').addEventListener('click', async ()
         await deleteUser(currentUser);
         
         alert('Your account has been deleted.');
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     } catch (error) {
         console.error('Error deleting account:', error);
         deleteBtn.disabled = false;
@@ -448,7 +449,7 @@ document.getElementById('delete-account-btn').addEventListener('click', async ()
 document.getElementById('logout-btn').addEventListener('click', async () => {
     try {
         await signOut(auth);
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     } catch (error) {
         console.error('Error signing out:', error);
     }

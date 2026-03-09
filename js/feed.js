@@ -1,5 +1,6 @@
 // Feed Page
 import { auth, db, onAuthStateChanged, signOut } from './firebase-config.js';
+const BASE = window.MYSHELF_BASE || '';
 import { 
     collection, 
     query, 
@@ -69,7 +70,7 @@ onAuthStateChanged(auth, (user) => {
         // Set profile link
         const profileLink = document.getElementById('my-profile-link');
         if (profileLink) {
-            profileLink.href = `/pages/user.html?id=${user.uid}`;
+            profileLink.href = `${BASE}/pages/user.html?id=${user.uid}`;
         }
         
         if (user.photoURL) {
@@ -83,7 +84,7 @@ onAuthStateChanged(auth, (user) => {
         
         initializeFeed();
     } else {
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     }
 });
 
@@ -291,7 +292,7 @@ function createFeedItem(item) {
     return `
         <div class="feed-item" data-item-id="${item.id}">
             <div class="feed-item-header">
-                <a href="/pages/user.html?id=${item.userId}" class="feed-user-link" onclick="event.stopPropagation()">
+                <a href="${BASE}/pages/user.html?id=${item.userId}" class="feed-user-link" onclick="event.stopPropagation()">
                     ${userAvatarHtml}
                     <span class="feed-user-name">${user.displayName || 'User'}</span>
                 </a>
@@ -366,7 +367,7 @@ function showItemDetail(item) {
         <div class="detail-info">
             <div class="feed-item-attribution">
                 <span>Added by</span>
-                <a href="/pages/user.html?id=${item.userId}" class="attribution-link">@${user.username || 'user'}</a>
+                <a href="${BASE}/pages/user.html?id=${item.userId}" class="attribution-link">@${user.username || 'user'}</a>
             </div>
             <span class="item-category">${item.category}</span>
             <h2>${item.name}</h2>
@@ -453,7 +454,7 @@ document.addEventListener('keydown', (e) => {
 document.getElementById('logout-btn').addEventListener('click', async () => {
     try {
         await signOut(auth);
-        window.location.href = '/pages/auth.html';
+        window.location.href = `${BASE}/pages/auth.html`;
     } catch (error) {
         console.error('Error signing out:', error);
     }

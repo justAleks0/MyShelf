@@ -1,5 +1,6 @@
 // Authentication Logic
 import { auth, onAuthStateChanged, googleProvider, signInWithPopup } from './firebase-config.js';
+const BASE = window.MYSHELF_BASE || '';
 import { 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword,
@@ -9,7 +10,7 @@ import {
 // Check if user is already logged in
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        window.location.href = '/';
+        window.location.href = BASE + '/';
     }
 });
 
@@ -48,7 +49,7 @@ loginForm.addEventListener('submit', async (e) => {
     
     try {
         await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = '/';
+        window.location.href = BASE + '/';
     } catch (error) {
         loginError.textContent = getErrorMessage(error.code);
     }
@@ -72,7 +73,7 @@ signupForm.addEventListener('submit', async (e) => {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(userCredential.user, { displayName: name });
-        window.location.href = '/';
+        window.location.href = BASE + '/';
     } catch (error) {
         signupError.textContent = getErrorMessage(error.code);
     }
@@ -108,7 +109,7 @@ function getErrorMessage(code) {
 async function handleGoogleSignIn() {
     try {
         await signInWithPopup(auth, googleProvider);
-        window.location.href = '/';
+        window.location.href = BASE + '/';
     } catch (error) {
         const errorMsg = getErrorMessage(error.code);
         if (loginForm.style.display !== 'none') {
